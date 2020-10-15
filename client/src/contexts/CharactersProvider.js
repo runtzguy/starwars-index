@@ -11,6 +11,7 @@ export function useCharacters(){
 export function CharactersProvider({children}) {
     const [charactersInfo, setCharactersInfo] = useLocalStorage('characters', []);
 
+    /*
     useEffect(() => {
       axios.get('/people')
       .then(res => {
@@ -19,10 +20,10 @@ export function CharactersProvider({children}) {
           }
       }).catch(err => console.error(err));
       
-    }, [])
+    }, [])*/
 
     return (
-        <CharactersContext.Provider value={{charactersInfo}}>
+        <CharactersContext.Provider value={{charactersInfo, setCharactersInfo}}>
             {children}
         </CharactersContext.Provider>
     )
