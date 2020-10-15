@@ -5,7 +5,7 @@ import { useHistory, Redirect, Link} from 'react-router-dom'
 import { useCharacters } from '../contexts/CharactersProvider'
 import {cardStyle} from '../css/cardStyle'
 
-export default function FilmCard({film, handleSeeCharacterButton}) {
+export default function FilmCard({film, handleSeeCharacterButton, triggerLoadingSpinner}) {
     const {setCharactersInfo} = useCharacters()
     const history = useHistory();
 
@@ -13,6 +13,7 @@ export default function FilmCard({film, handleSeeCharacterButton}) {
         e.preventDefault();
         //using falsy and truthy to check if film.characters is empty
         if(film.characters){
+            triggerLoadingSpinner(true);
             axios.get('/characters', {
                 params : {
                     Urls : [...film.characters]
@@ -20,6 +21,7 @@ export default function FilmCard({film, handleSeeCharacterButton}) {
             }).then(response => {
                 setCharactersInfo(response.data.data);
                 history.push('/film/characters')
+                triggerLoadingSpinner(false);
                 handleSeeCharacterButton();
                 
             })
