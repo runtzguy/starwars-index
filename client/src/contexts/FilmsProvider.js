@@ -12,7 +12,7 @@ export function FilmsProvider({children}) {
     const [films, setFilms] = useLocalStorage('films', []);
 
     useEffect(() => {
-        if(films.length == 0){
+        if(films.length === 0){
             axios.get('/films', {timeout : 5000})
             .then(res => {
                 if(res.data.isSuccess){

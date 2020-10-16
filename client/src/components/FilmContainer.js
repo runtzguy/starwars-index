@@ -33,7 +33,7 @@ export default function FilmContainer({handleSeeCharacterButton, triggerLoadingS
                     </FilmCard>  
                     )
                 ) 
-                : films.length == 0 
+                : films.length === 0 
                     ? <div>Unable to reach server</div> 
                     : <div>No film title or opening crawl matching: <b>{searchValue}</b></div>
             }
