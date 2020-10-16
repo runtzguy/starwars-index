@@ -84,7 +84,7 @@ app.get('/characters', (request, response) => {
         console.log('No urls to query');
         response.status(400).json({message: msg, isSuccess: false});
     }
-
+    
     axios.all(urlsFiltered.map(url => axios.get(url)))
         .then(axios.spread((...responses) => {
             const data = responses.map( x => x.data);
