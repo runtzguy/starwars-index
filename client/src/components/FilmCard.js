@@ -6,26 +6,22 @@ import { useCharacters } from '../contexts/CharactersProvider'
 import {cardStyle} from '../css/cardStyle'
 
 export default function FilmCard({film, handleSeeCharacterButton, triggerLoadingSpinner}) {
-    const {setCharactersInfo} = useCharacters()
+    const {getCharactersByUrls} = useCharacters()
     const history = useHistory();
 
-    function handleSeeCharacters(e){
+    function handleSeeCharacters(){
         //using falsy and truthy to check if film.characters is empty
         if(film.characters){
             triggerLoadingSpinner(true);
-            axios.get('/characters', {
-                params : {
-                    Urls : [...film.characters]
-                },
-                timeout: 5000
-            }).then(response => {
-                setCharactersInfo(response.data.data);
-                history.push('/film/characters')
+            getCharactersByUrls(film.characters)
+            .then((result) => {
                 triggerLoadingSpinner(false);
                 handleSeeCharacterButton();
-                
+            }).catch(err => {
+                alert(err)
+                console.log(err.message)
+                triggerLoadingSpinner(false);
             })
-            .catch(err => console.log(err.response.data));
         } else {
             alert('No film characters to query');
         }

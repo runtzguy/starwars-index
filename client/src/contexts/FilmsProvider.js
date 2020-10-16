@@ -13,7 +13,7 @@ export function FilmsProvider({children}) {
 
     useEffect(() => {
         if(films.length == 0){
-            axios.get('/films')
+            axios.get('/films', {timeout : 5000})
             .then(res => {
                 if(res.data.isSuccess){
                     setFilms(res.data.data.results);
