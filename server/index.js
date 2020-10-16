@@ -10,6 +10,8 @@ const config = require('../config.js')[env];
 const url = 'https://swapi.dev';
 const successsMsg = 'Successful data retrieval';
 const failMsg = 'Unsuccessful data retrieval';
+const serverRequestFailMsg = 'Error: Unable to process request data from API Endpoint';
+const serverGeneralErrorMsg = 'Internal Server Error';
 
 
 app.use(bodyParser.json()); //support json encoded bodies
@@ -27,19 +29,36 @@ app.get('/people', (request, response) => {
     .then((res) => {
         response.json({message: successsMsg, isSuccess: true, data : res.data});
     }).catch(err => {
-        console.error(err);
-        res.json({message: failMsg, isSuccess: false});
+        if(err.response){
+            console.log(err.response.data);
+            response.json({message: failMsg, isSuccess: false});
+        } else if (err.request){
+            console.log(serverRequestFailMsg)
+            response.json({message: failMsg, isSuccess: false});
+        } else {
+            console.log(serverGeneralErrorMsg);
+            response.json({message: failMsg, isSuccess: false});
+        }
     })
 })
 
 app.get('/films', (request, response) => {
     console.log('Request for /films...');
-    axios.get(url + '/api/films')
+    axios.get(url + '/api/films/', {timeout : 5000})
     .then(res => {
         response.json({message :successsMsg, isSuccess: true, data: res.data})
+        return;
     }).catch(err => {
-        console.error(err);
-        res.json({message: failMsg, isSuccess: false});
+        if(err.response){
+            console.log(err.response.data);
+            response.status(500).json({message: failMsg, isSuccess: false});
+        } else if (err.request){
+            console.log(serverRequestFailMsg)
+            response.status(500).json({message: failMsg, isSuccess: false});
+        } else {
+            console.log(serverGeneralErrorMsg);
+            response.status(500).json({message: failMsg, isSuccess: false});
+        }
     })
 })
 
@@ -49,8 +68,8 @@ app.get('/characters', (request, response) => {
     //Check if query param exist
     if(!request.query.Urls){
         let msg = 'No Urls query param provided';
-        console.error(msg);
-        response.statusCode(400).json({message: msg, isSuccess: false});
+        console.log(msg);
+        response.status(400).json({message: msg, isSuccess: false});
         return;
     }
     const urls = request.query.Urls;
@@ -59,16 +78,28 @@ app.get('/characters', (request, response) => {
     const urlsFiltered = urls.filter(url => {
         //return url if it is truthy and don't if its falsy
         if(url) return url
-    })  
+    })
+    
+    if(urlsFiltered.length == 0){
+        console.log('No urls to query');
+        response.status(400).json({message: msg, isSuccess: false});
+    }
+    
     axios.all(urlsFiltered.map(url => axios.get(url)))
         .then(axios.spread((...responses) => {
             const data = responses.map( x => x.data);
-            console.log(data);
             response.json({message: successsMsg, isSuccess: true, data})
         })).catch(err => {
-            console.error(err);
-            response.statusCode(200).json({message: failMsg, isSuccess: true});
-            return
+            if(err.response){
+                console.log(err.response.data);
+                response.status(500).json({message: failMsg, isSuccess: false});
+            } else if (err.request){
+                console.log(serverRequestFailMsg)
+                response.status(500).json({message: failMsg, isSuccess: false});
+            } else {
+                console.log(serverGeneralErrorMsg);
+                response.status(500).json({message: failMsg, isSuccess: false});
+            }
         })
 })
 
