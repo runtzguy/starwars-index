@@ -19,7 +19,7 @@ export function FilmsProvider({children}) {
                     setFilms(res.data.data.results);
                 }
             }).catch(err => {
-                console.error(err);
+                console.log(err.response.data);
             })
         }
         

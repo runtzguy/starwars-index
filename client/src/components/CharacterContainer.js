@@ -12,6 +12,7 @@ export default function CharacterContainer() {
         {charactersInfo.length > 0 
             ? charactersInfo.map(character => 
                 <CharacterCard 
+                    key={character.name}
                     character={character}
                     >
                 </CharacterCard>

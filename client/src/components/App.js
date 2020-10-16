@@ -7,10 +7,12 @@ import {FilmsProvider} from '../contexts/FilmsProvider';
 import {CharactersProvider} from '../contexts/CharactersProvider';
 import CharacterContainer from './CharacterContainer'
 import LoadingSpinner from './LoadingSpinner'
+import SearchBar from './SearchBar';
 
 function App() {
   const [isSeeCharacterSelected, setIsSeeCharacterSelected] = useState(false)
   const [isLoadingSpinnerActive, setIsLoadingSpinnerActive] = useState(false)
+  const [searchValue, setSearchValue] = useState('');
 
   function handleSeeCharacterButton(){
     setIsSeeCharacterSelected(true);
@@ -22,6 +24,7 @@ function App() {
 
   return (
     <Container>
+      <SearchBar setSearchValue={setSearchValue}/>
       <Router>
         <FilmsProvider>
         <CharactersProvider>
@@ -33,6 +36,7 @@ function App() {
                 <FilmContainer 
                   handleSeeCharacterButton={handleSeeCharacterButton}
                   triggerLoadingSpinner={triggerLoadingSpinner}
+                  searchValue={searchValue}
                 />}
               >
               </Route>
@@ -41,6 +45,7 @@ function App() {
                 <FilmContainer 
                   handleSeeCharacterButton={handleSeeCharacterButton}
                   triggerLoadingSpinner={triggerLoadingSpinner}
+                  searchValue={searchValue}
                 />}
               >
               </Route>
