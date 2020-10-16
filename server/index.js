@@ -19,8 +19,7 @@ app.use(bodyParser.urlencoded({extended : false})); // support encoded bodies
 app.use(express.static(path.join(__dirname, '../client/build'))); //Serve the static files from the React App
 
 app.get("/", (req, res) => {
-    res.json({message: 'Unavailable'});
-    //res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
+    res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
 })
 
 app.get('/people', (request, response) => {
