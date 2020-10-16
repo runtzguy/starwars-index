@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import { Card, Button } from 'react-bootstrap'
 import { useHistory} from 'react-router-dom'
 import { useCharacters } from '../contexts/CharactersProvider'
@@ -16,6 +15,7 @@ export default function FilmCard({film, handleSeeCharacterButton, triggerLoading
             getCharactersByUrls(film.characters)
             .then((result) => {
                 triggerLoadingSpinner(false);
+                history.push('/film/characters');
                 handleSeeCharacterButton();
             }).catch(err => {
                 alert(err)
